@@ -1,0 +1,44 @@
+﻿@page "/counter"
+@attribute [Authorize]
+
+<PageTitle>Counter</PageTitle>
+
+<h1>Counter</h1>
+
+@if (!_Access)
+{
+    <h1>You dont have access to this page.</h1>
+}
+else
+{
+    <h1>Counter</h1>
+    <p role="status">Current count: @currentCount</p>
+    <button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+}
+
+
+@code {
+    private int currentCount = 0;
+    [CascadingParameter] protected Task<AuthenticationState> AuthStat { get; set; }
+    private bool _Access;
+
+    protected async override Task OnInitializedAsync()
+    {
+        base.OnInitialized();
+        var user = (await AuthStat).User;
+        if (!user.Identity.IsAuthenticated)
+        {
+            _navigationManager.NavigateTo($"login?returnUrl={Uri.EscapeDataString(_navigationManager.Uri)}");
+        }
+        else
+        {
+            _Access = securityService.HasPermission(user, Access.CounterPage.CounterFunction);
+        }
+    }
+
+
+    private void IncrementCount()
+    {
+        currentCount++;
+    }
+}

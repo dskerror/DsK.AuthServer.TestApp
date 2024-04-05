@@ -1,0 +1,17 @@
+﻿@page "/login"
+
+<PageTitle>Login</PageTitle>
+
+<h1>Login</h1>
+
+<button @onclick="LoginLocal">Click here to login locally</button>
+
+@code {
+
+    public async Task LoginLocal()
+    {
+        string loginurl = "https://localhost:7190/login/8a35c0fe-279e-4b75-b75f-d5848ad48ae4";
+        _navigationManager.NavigateTo(loginurl);
+    }
+}
+
